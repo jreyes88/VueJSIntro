@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vue JS Intro</title>
+	<link rel="stylesheet" type="text/css" href="Assets/CSS/style.css">
+</head>
+<body>
+
+	<!-- v-cloak hides any un-compiled data bindings until the Vue instance is ready. -->
+	<!-- When the element is clicked the hideTooltp() method is called. -->
+	<div id="main">
+	
+	    <!-- The navigation menu will get the value of the "active" variable as a class. -->
+		
+	    <!-- To stops the page from jumping when a link is clicked 
+	        we use the "prevent" modifier (short for preventDefault). -->
+
+		<nav v-bind:class="active" v-on:click.prevent>
+
+			<!-- When a link in the menu is clicked, we call the makeActive method, 
+	        defined in the JavaScript Vue instance. It will change the value of "active". -->
+
+			<a href="#" class="home" v-on:click="makeActive('home')">Home</a>
+			<a href="#" class="projects" v-on:click="makeActive('projects')">Projects</a>
+			<a href="#" class="services" v-on:click="makeActive('services')">Services</a>
+			<a href="#" class="contact" v-on:click="makeActive('contact')">Contact</a>
+		</nav>
+
+	 	<!-- The mustache expression will be replaced with the value of "active".
+	 		 It will automatically update to reflect any changes. -->
+
+		<p>You chose <b>{{active}}</b></p>
+	</div>
+
+	<div id="mainEdit" v-cloak v-on:click="hideTooltip" >
+
+	    <!-- This is the tooltip. 
+	         v-on:clock.stop is an event handler for clicks, with a modifier that stops event propagation.
+	         v-if makes sure the tooltip is shown only when the "showtooltip" variable is truthful -->
+
+	    <div class="tooltip" v-on:click.stop v-if="show_tooltip">
+
+	        <!-- v-model binds the contents of the text field with the "text_content" model.
+	         Any changes to the text field will automatically update the value, and
+	         all other bindings on the page that depend on it.  -->
+
+	        <input type="text" v-model="text_content" />
+	    </div>
+
+	    <!-- When the paragraph is clicked, call the "toggleTooltip" method and stop event propagation. -->
+
+	    <!-- The mustache expression will be replaced with the value of "text_content".
+	         It will automatically update to reflect any changes to that variable. -->
+
+	    <p v-on:click.stop="toggleTooltip">{{text_content}}</p>
+
+	</div>
+
+	<form id="mainForm" v-cloak>
+
+		<h1>Services</h1>
+
+		<ul>
+			<!-- Loop through the services array, assign a click handler, and set or
+				 remove the "active" css class if needed -->
+			<li v-for="service in services" v-on:click="toggleActive(service)" v-bind:class="{ 'active': service.active}">
+				<!-- Display the name and price for every entry in the array .
+	                Vue.js has a built in currency filter for formatting the price -->
+				{{service.name}} <span>{{service.price | currency}}</span>
+			</li>
+		</ul>
+
+		<div class="total">
+			<!-- Calculate the total price of all chosen services. Format it as currency. -->
+			Total: <span>{{total() | currency}}</span>
+		</div>
+
+	</form>
+
+	<form id="mainSearch" v-cloak>
+
+	    <div class="bar">
+	        <!-- Create a binding between the searchString model and the text field -->
+
+	        <input type="text" v-model="searchString" placeholder="Enter your search terms" />
+	    </div>
+
+	    <ul>
+	        <!-- Render a li element for every entry in the computed filteredArticles array. -->
+	             
+	        <li v-for="article in filteredArticles">
+	            <a v-bind:href="article.url"><img v-bind:src="article.image" /></a>
+	            <p>{{article.title}}</p>
+	        </li>
+	    </ul>
+
+	</form>
+
+	<form id="mainGrid" v-cloak>
+
+		<div class="bar">
+
+			<!-- These two buttons switch the layout variable,
+				 which causes the correct UL to be shown. -->
+
+			<a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"></a>
+			<a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"></a>
+		</div>
+
+		<!-- We have two layouts. We choose which one to show depending on the "layout" binding -->
+
+		<ul v-if="layout == 'grid'" class="grid">
+			<!-- A view with big photos and no text -->
+			<li v-for="a in articles">
+				<a v-bind:href="a.url" target="_blank"><img v-bind:src="a.image.large" /></a>
+			</li>
+		</ul>
+
+		<ul v-if="layout == 'list'" class="list">
+			<!-- A compact view smaller photos and titles -->
+			<li v-for="a in articles">
+				<a v-bind:href="a.url" target="_blank"><img v-bind:src="a.image.small" /></a>
+				<p>{{a.title}}</p>
+			</li>
+		</ul>
+
+	</form>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+
+	<script type="text/javascript" src="Assets/JS/vue.js"></script>
+
+</body>
+</html>
